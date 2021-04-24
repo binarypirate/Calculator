@@ -39,6 +39,14 @@ public class MainActivity extends AppCompatActivity implements CalculatorEventLi
 
     @Override
     public void onResultCalculated(String answer) {
+        if (answer.contains(".")) {
+            String literalBeforePeriod = answer.substring(0, answer.indexOf("."));
+            String literalAfterPeriod = answer.substring(answer.indexOf("."));
+            if (literalAfterPeriod.length() > 2) {
+                literalAfterPeriod = literalAfterPeriod.substring(0, 2);
+            }
+            answer = literalBeforePeriod + literalAfterPeriod;
+        }
         mBinding.answer.setText(answer);
     }
 

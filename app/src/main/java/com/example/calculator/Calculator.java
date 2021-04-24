@@ -1,11 +1,15 @@
 package com.example.calculator;
 
+import android.util.Log;
+
 import com.example.calculator.string_slicer.StringSlicer;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Calculator {
 
     private String question = "";
-    private String answer = "";
     private final CalculatorEventListener eventListener;
 
     public Calculator(CalculatorEventListener eventListener) {
@@ -49,7 +53,50 @@ public class Calculator {
     }
 
     public void calculate() {
-        eventListener.onResultCalculated("SOON!");
+        if (question.isEmpty() || !containsArithmeticOperator(question) ||
+                isArithmeticOperator(StringSlicer.endingSlice(question)) || question.endsWith(Constants.DOT)) {
+            eventListener.onResultCalculated("SOON!");
+        } else {
+            List<String> options = new ArrayList<>();
+            String item = "";
+            for (int i = 0; i < question.length(); i++) {
+                if (Character.isDigit(question.charAt(i)) || String.valueOf(question.charAt(i)).equals(Constants.DOT)) {
+                    item += String.valueOf(question.charAt(i));
+                } else {
+                    options.add(item);
+                    item = "";
+                    options.add(String.valueOf(question.charAt(i)));
+                }
+                if (i == question.length() - 1) {
+                    options.add(item);
+                }
+            }
+
+            for (String str: options) {
+                Log.d("CalcOptions", "calculate: " + str);
+            }
+
+            double result = Double.parseDouble(options.get(0));
+            for (int i = 1; i < options.size(); i += 2) {
+                double v2 = Double.parseDouble(options.get(i + 1));
+                String op = options.get(i);
+                switch (op) {
+                    case Constants.DIVIDE_SIGN:
+                        result /= v2;
+                        break;
+                    case Constants.MULTIPLY_SIGN:
+                        result *= v2;
+                        break;
+                    case Constants.ADD_SIGN:
+                        result += v2;
+                        break;
+                    case Constants.SUBTRACT_SIGN:
+                        result -= v2;
+                        break;
+                }
+            }
+            eventListener.onResultCalculated(String.valueOf(result));
+        }
     }
 
     private boolean isArithmeticOperator(String input) {
