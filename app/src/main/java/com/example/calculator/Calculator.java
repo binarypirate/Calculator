@@ -1,12 +1,6 @@
 package com.example.calculator;
 
-import android.util.Log;
-
-import androidx.annotation.LongDef;
-
 import com.example.calculator.string_slicer.StringSlicer;
-
-import java.util.Arrays;
 
 public class Calculator {
 
@@ -23,7 +17,7 @@ public class Calculator {
             if (Character.isDigit(input.charAt(0))) setQuestion(input);
         } else {
             if (StringSlicer.endingSlice(question).equals(Constants.DOT)) {
-                if (!input.equals(Constants.EQUAL) && !input.equals(Constants.DOT) && !isArithmeticOperator(input)) {
+                if (!input.equals(Constants.DOT) && !isArithmeticOperator(input)) {
                     setQuestion(question + input);
                 }
             } else if (isArithmeticOperator(StringSlicer.endingSlice(question))) {
@@ -36,17 +30,26 @@ public class Calculator {
                         setQuestion(question + input);
                     } else {
                         String endLiteralAfterLastDot  = question.substring(question.lastIndexOf("."));
-                        String lastCharInEndingLiteral = StringSlicer.endingSlice(endLiteralAfterLastDot);
-                        if (isArithmeticOperator(lastCharInEndingLiteral)) {
+                        if (containsArithmeticOperator(endLiteralAfterLastDot)) {
                             setQuestion(question + input);
                         }
                     }
                 } else {
                     setQuestion(question + input);
                 }
-
             }
         }
+    }
+
+    private boolean containsArithmeticOperator(String expression) {
+        return (expression.contains(Constants.DIVIDE_SIGN) ||
+                expression.contains(Constants.MULTIPLY_SIGN) ||
+                expression.contains(Constants.ADD_SIGN) ||
+                expression.contains(Constants.SUBTRACT_SIGN));
+    }
+
+    public void calculate() {
+        eventListener.onResultCalculated("SOON!");
     }
 
     private boolean isArithmeticOperator(String input) {

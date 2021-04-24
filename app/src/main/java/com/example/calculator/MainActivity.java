@@ -38,6 +38,11 @@ public class MainActivity extends AppCompatActivity implements CalculatorEventLi
     }
 
     @Override
+    public void onResultCalculated(String answer) {
+        mBinding.answer.setText(answer);
+    }
+
+    @Override
     public void onKeyPressed(String keyText) {
         mCalculator.setInput(keyText);
     }
@@ -45,5 +50,10 @@ public class MainActivity extends AppCompatActivity implements CalculatorEventLi
     @Override
     public void onClearKeyPressed() {
         mCalculator.clearInput();
+    }
+
+    @Override
+    public void onEqualKeyPressed() {
+        mCalculator.calculate();
     }
 }
