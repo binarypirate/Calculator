@@ -32,12 +32,14 @@ public class Calculator {
                 }
             } else {
                 if (input.equals(Constants.DOT)) {
-                    if (endingLiteralAfterDotHasOperator(question + Constants.DOT)) {
-                        Log.d("Which", "Has Operator: ");
+                    if (!question.contains(Constants.DOT)) {
                         setQuestion(question + input);
                     } else {
-                        Log.d("Which", "Doesn't Have Operator: ");
-                        setQuestion(question + input);
+                        String endLiteralAfterLastDot  = question.substring(question.lastIndexOf("."));
+                        String lastCharInEndingLiteral = StringSlicer.endingSlice(endLiteralAfterLastDot);
+                        if (isArithmeticOperator(lastCharInEndingLiteral)) {
+                            setQuestion(question + input);
+                        }
                     }
                 } else {
                     setQuestion(question + input);
@@ -45,24 +47,6 @@ public class Calculator {
 
             }
         }
-    }
-
-    private boolean endingLiteralAfterDotHasOperator(String question) {
-        String[] sp = question.split("\\.");
-        String endItem = sp[sp.length - 1];
-        Log.d("Which", "endingLiteralAfterDotHasOperator: " + question);
-        Log.d("Which", "endingLiteralAfterDotHasOperator: " + Arrays.toString(sp));
-        Log.d("Which", "endingLiteral: " + endItem);
-        if (endItem.contains(Constants.DIVIDE_SIGN)) {
-            return true;
-        } else if (endItem.contains(Constants.MULTIPLY_SIGN)) {
-            return true;
-        } else if (endItem.contains(Constants.ADD_SIGN)) {
-            return true;
-        } else if (endItem.contains(Constants.SUBTRACT_SIGN)) {
-            return true;
-        }
-        return false;
     }
 
     private boolean isArithmeticOperator(String input) {
